@@ -1,1 +1,1 @@
-import Header from'../components/Header';export default ()=> (<><Header/><div className='p-4'>Admin Prices Page</div></>);
+import Header from'../components/Header';export default()=><> <Header/><div className='p-4'>Admin Price page placeholder</div></>;

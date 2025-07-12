@@ -1,6 +1,5 @@
-
-export default function Header(){
-  return(
+export default function Header() {
+  return (
     <header>
       <img src="/logo.png" alt="logo"/>
       <h1>Raven's Scrap &amp; Supply</h1>
