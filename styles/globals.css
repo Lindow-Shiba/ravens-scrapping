@@ -1,61 +1,11 @@
 
-:root {
-  --gold: #cba45d;
-  --black: #000;
-}
-
 body {
-  background-color: var(--black);
-  color: var(--gold);
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
 }
-
-.container {
-  display: flex;
-  height: calc(100vh - 50px);
+.text-gold {
+  color: #d4af37;
 }
-
-.left {
-  flex: 0 0 45%;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.right {
-  flex: 1;
-  border-left: 2px solid var(--gold);
-  padding: 20px 30px;
-  overflow-y: auto;
-}
-
-.mat-btn {
-  display: inline-block;
-  margin: 4px 4px;
-  padding: 6px 12px;
-  font-size: 13px;
-  background: var(--gold);
-  border: none;
-  border-radius: 4px;
-  color: #000;
-  cursor: pointer;
-}
-.mat-btn:hover {
-  background: #fad673;
-}
-
-.download {
-  width: 100%;
-  margin-top: 6px;
-  padding: 10px;
-  font-weight: bold;
-  background: var(--gold);
-  border: none;
-  color: #000;
-  cursor: pointer;
-}
-.download:hover {
-  background: #fad673;
+.bg-gold {
+  background-color: #d4af37;
 }
