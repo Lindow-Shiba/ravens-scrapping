@@ -64,7 +64,13 @@ export default function MaterialPrice() {
 
   return (
     <PasswordGate>
-      <div className="p-4">
+      
+<nav>
+  <a href="/">Home</a>
+  <a href="/database">Database</a>
+  <a href="/material-price">Admin Prices</a>
+</nav>
+<div className="p-4">
         <h1 className="text-xl font-bold mb-4">Material Price Admin</h1>
         <table>
           <thead>

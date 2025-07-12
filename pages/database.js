@@ -26,7 +26,13 @@ export default function Database() {
   };
 
   return (
-    <div className="p-4">
+    
+<nav>
+  <a href="/">Home</a>
+  <a href="/database">Database</a>
+  <a href="/material-price">Admin Prices</a>
+</nav>
+<div className="p-4">
       <h1 className="text-xl font-bold mb-3">Employees</h1>
       <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Name" />
       <input value={newCid} onChange={e => setNewCid(e.target.value)} placeholder="CID" />

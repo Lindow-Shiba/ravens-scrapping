@@ -42,7 +42,13 @@ export default function Home() {
   };
 
   return (
-    <div className="p-4">
+    
+<nav>
+  <a href="/">Home</a>
+  <a href="/database">Database</a>
+  <a href="/material-price">Admin Prices</a>
+</nav>
+<div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Invoice Generator</h1>
       <div className="mb-4">
         <select value={selectedEmployeeId} onChange={e => setSelectedEmployeeId(e.target.value)}>
