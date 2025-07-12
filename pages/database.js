@@ -1,1 +1,1 @@
-export default ()=> <div style={{color:'#d4af37',padding:20}}>Database CRUD here</div>
+// Employee database CRUD operations

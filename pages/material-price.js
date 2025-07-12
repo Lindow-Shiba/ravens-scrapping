@@ -1,1 +1,1 @@
-export default ()=> <div style={{color:'#d4af37',padding:20}}>Material Price CRUD here</div>
+// Admin prices management page

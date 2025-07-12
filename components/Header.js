@@ -1,14 +1,16 @@
 import Link from 'next/link';
-export default function Header(){
-  return(
+import Image from 'next/image';
+
+export default function Header() {
+  return (
     <header>
-      <img src="/logo.png" alt="logo"/>
-      <h1>Raven's Scrap & Supply</h1>
+      <Image src="/logo.png" alt="Raven's Logo" width={40} height={40} />
+      <h1 style={{ marginRight: 'auto' }}>Raven's Scrap & Supply</h1>
       <nav>
-        <Link href="/">Materials</Link>
+        <Link href="/">Home</Link>
         <Link href="/database">Database</Link>
         <Link href="/material-price">Admin Prices</Link>
       </nav>
     </header>
-  )
+  );
 }
