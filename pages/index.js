@@ -1,85 +1,75 @@
-import { useState, useEffect } from 'react';
+import {useState,useEffect} from 'react';
+import {createClient} from '@supabase/supabase-js';
 import Header from '@/components/Header';
 
-export default function Home() {
-  const [qtys, setQtys] = useState({});
-  const [employees, setEmployees] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState('');
-  const [warehouse, setWarehouse] = useState('Bennys');
-  const [date, setDate] = useState('');
-  const [notes, setNotes] = useState('');
+const sb=createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-  useEffect(() => {
-    // Fetch from Supabase
-    fetch('/api/employees')
-      .then(res => res.json())
-      .then(data => setEmployees(data));
-  }, []);
+const car=['Axle Parts','Body Repair Tools','Brake Pads','Clutch Kits','Fuel Straps','Radiator Part','Suspension Parts','Tire Repair Kit','Transmission Parts','Wires'];
+const mat=['Aluminium','Battery','Carbon','Clutch Fluid','Coil Spring','Copper','Copper Wires','Electronics','Graphite','Iron','Laminated Plastic','Lead','Multi-Purpose Grease','Paint Thinner','Plastic','Polymer','Polyethylene','Rubber','Rusted Metal','Scrap Metal','Silicone','Stainless Steel','Steel','Timing Belt','Gun Powder','Iron Ore'];
+const extra=['Apple Phone','Adv Lockpick','Bottle Cap','Deformed Nail','Empty Bottle Glass','Horse Shoe','Leather','Lockpick','Old Coin','Pork & Beans','Repair Kit','Rusted Lighter','Rusted Tin Can','Rusted Watch','Samsung Phone'];
 
-  const sections = {
-    'Car Internals': ["Axle Parts", "Body Repair Tools", "Brake Pads", "Clutch Kits", "Fuel Straps", "Radiator Part", "Suspension Parts", "Tire Repair Kit", "Transmission Parts", "Wires"],
-    'Materials': ["Aluminium", "Battery", "Carbon", "Clutch Fluid", "Coil Spring", "Copper", "Copper Wires", "Electronics", "Graphite", "Iron", "Laminated Plastic", "Lead", "Multi-Purpose Grease", "Paint Thinner", "Plastic", "Polymer", "Polyethylene", "Rubber", "Rusted Metal", "Scrap Metal", "Silicone", "Stainless Steel", "Steel", "Timing Belt", "Gun Powder", "Iron Ore"],
-    'Extra Items': ["Apple Phone", "Adv Lockpick", "Bottle Cap", "Deformed Nail", "Empty Bottle Glass", "Horse Shoe", "Leather", "Lockpick", "Old Coin", "Pork & Beans", "Repair Kit", "Rusted Lighter", "Rusted Tin Can", "Rusted Watch", "Samsung Phone"]
+export default function Home(){
+  const [emps,setEmps]=useState([]);
+  const [empId,setEmpId]=useState('');
+  const [wh,setWh]=useState('');
+  const [items,setItems]=useState([]);
+  const [notes,setNotes]=useState('');
+  const today=new Date().toLocaleDateString('en-US');
+
+  useEffect(()=>{sb.from('employees').select('*').then(({data})=>setEmps(data||[]))},[]);
+
+  const addItem=n=>{
+    setItems(p=>{
+      const ex=p.find(i=>i.name===n);
+      return ex?p.map(i=>i.name===n?{...i,qty:i.qty+1}:i):[...p,{name:n,qty:1}];
+    });
   };
+  const setQty=(n,val)=>setItems(items.map(i=>i.name===n?{...i,qty:parseInt(val,10)||1}:i));
 
-  const handleQtyChange = (item, value) => {
-    setQtys({ ...qtys, [item]: value });
-  };
-
-  return (
+  const total=items.reduce((s,i)=>s+i.qty,0);
+  const emp=emps.find(e=>e.id==empId); const pct=emp?.commission||0;
+  return(
     <>
-      <Header />
-      <div style={{ display: 'flex', padding: '20px' }}>
-        {/* Left Side: Receipt */}
-        <div style={{ flex: 1, marginRight: '20px' }}>
+      <Header/>
+      <div className="container">
+        <div className="left-panel">
           <h2>Receipt</h2>
-          <div>
-            <label>Employee:</label>
-            <select value={selectedEmployee} onChange={e => setSelectedEmployee(e.target.value)}>
-              <option value="">Select</option>
-              {employees.map(emp => (
-                <option key={emp.id} value={emp.id}>{emp.name}</option>
-              ))}
+          <table><thead><tr><th>Item</th><th>Qty</th></tr></thead>
+            <tbody>{items.map(i=>(
+              <tr key={i.name}>
+                <td>{i.name}</td>
+                <td><input type="number" value={i.qty} min="1" onChange={e=>setQty(i.name,e.target.value)}/></td>
+              </tr>))}</tbody>
+          </table>
+
+          <div style={{marginTop:'auto'}}>
+            <select value={empId} onChange={e=>setEmpId(e.target.value)}>
+              <option value="">Select your Name</option>
+              {emps.map(e=><option key={e.id} value={e.id}>{e.name}</option>)}
             </select>
-          </div>
-          <div>
-            <label>Warehouse:</label>
-            <select value={warehouse} onChange={e => setWarehouse(e.target.value)}>
-              <option value="Bennys">Bennys</option>
-              <option value="AE">AE</option>
+            <select value={wh} onChange={e=>setWh(e.target.value)}>
+              <option value="">Select Warehouse</option><option>Bennys</option><option>AE</option>
             </select>
-          </div>
-          <div>
-            <label>Date:</label>
-            <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-          </div>
-          <div>
-            <label>Notes:</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} />
-          </div>
-          <div>
-            <button onClick={() => alert("Invoice downloaded!")}>Download Invoice</button>
+            <input value={today} readOnly/>
+            <textarea rows={3} placeholder="Notes" value={notes} onChange={e=>setNotes(e.target.value)}/>
+            <p>Commission ({pct}%): ${(total*pct/100).toFixed(2)}</p>
+            <button className="download-btn">Download Invoice</button>
           </div>
         </div>
 
-        {/* Right Side: Items */}
-        <div style={{ flex: 2 }}>
-          {Object.entries(sections).map(([section, items]) => (
-            <div key={section}>
-              <h3>{section}</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {items.map(item => (
-                  <div key={item} style={{ margin: '5px', display: 'flex', alignItems: 'center' }}>
-                    <label>{item}</label>
-                    <input type="number" style={{ width: '50px', marginLeft: '5px' }}
-                      value={qtys[item] || ''} onChange={(e) => handleQtyChange(item, e.target.value)} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="right-panel">
+          <Section t="Car Internals" list={car} add={addItem}/>
+          <Section t="Materials" list={mat} add={addItem}/>
+          <Section t="Extra Items" list={extra} add={addItem}/>
         </div>
       </div>
     </>
-  );
+  )
 }
+
+const Section=({t,list,add})=>(
+  <>
+    <h3>{t}</h3>
+    {list.map(n=><button key={n} className="btn-item" onClick={()=>add(n)}>{n}</button>)}
+  </>
+);
