@@ -8,136 +8,107 @@ const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-/* ---------- Static button lists ---------- */
-const carInternals = [
-  'Axle Parts','Body Repair Tools','Brake Pads','Clutch Kits',
-  'Fuel Straps','Radiator Part','Suspension Parts',
-  'Tire Repair Kit','Transmission Parts','Wires'
-];
-const materials = [
-  'Aluminium','Battery','Carbon','Clutch Fluid','Coil Spring','Copper','Copper Wires',
-  'Electronics','Graphite','Iron','Laminated Plastic','Lead','Multi-Purpose Grease',
-  'Paint Thinner','Plastic','Polymer','Polyethylene','Rubber','Rusted Metal',
-  'Scrap Metal','Silicone','Stainless Steel','Steel','Timing Belt','Gun Powder',
-  'Iron Ore'
-];
-const extraItems = [
-  'Apple Phone','Adv Lockpick','Bottle Cap','Deformed Nail','Empty Bottle Glass',
-  'Horse Shoe','Leather','Lockpick','Old Coin','Pork & Beans','Repair Kit',
-  'Rusted Lighter','Rusted Tin Can','Rusted Watch','Samsung Phone'
-];
+const carInternals=[ 'Axle Parts','Body Repair Tools','Brake Pads','Clutch Kits','Fuel Straps',
+  'Radiator Part','Suspension Parts','Tire Repair Kit','Transmission Parts','Wires'];
 
-export default function Home() {
-  /* ---------- State ---------- */
-  const [employees, setEmployees] = useState([]);
-  const [empId, setEmpId] = useState('');
-  const [warehouse, setWarehouse] = useState('');
-  const [items, setItems] = useState([]);
-  const [notes, setNotes] = useState('');
-  const today = new Date().toLocaleDateString('en-US');
+const materials=[ 'Aluminium','Battery','Carbon','Clutch Fluid','Coil Spring','Copper','Copper Wires',
+  'Electronics','Graphite','Iron','Laminated Plastic','Lead','Multi-Purpose Grease','Paint Thinner',
+  'Plastic','Polymer','Polyethylene','Rubber','Rusted Metal','Scrap Metal','Silicone',
+  'Stainless Steel','Steel','Timing Belt','Gun Powder','Iron Ore'];
 
-  /* ---------- Load employees ---------- */
-  useEffect(() => {
-    sb.from('employees').select('*').then(({ data }) => setEmployees(data || []));
-  }, []);
+const extraItems=[ 'Apple Phone','Adv Lockpick','Bottle Cap','Deformed Nail','Empty Bottle Glass',
+  'Horse Shoe','Leather','Lockpick','Old Coin','Pork & Beans','Repair Kit','Rusted Lighter',
+  'Rusted Tin Can','Rusted Watch','Samsung Phone'];
 
-  /* ---------- Add / adjust items ---------- */
-  const addItem = (name) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.name === name);
-      if (existing) {
-        return prev.map(i => i.name === name ? { ...i, qty: i.qty + 1 } : i);
-      }
-      return [...prev, { name, qty: 1 }];
+export default function Home(){
+  const [employees,setEmployees]=useState([]);
+  const [empId,setEmpId]=useState('');
+  const [warehouse,setWarehouse]=useState('');
+  const [items,setItems]=useState([]);
+  const [notes,setNotes]=useState('');
+  const today=new Date().toLocaleDateString('en-US');
+
+  useEffect(()=>{ sb.from('employees').select('*').then(({data})=>setEmployees(data||[])); },[]);
+
+  const addItem=name=>{
+    setItems(prev=>{
+      const ex=prev.find(i=>i.name===name);
+      return ex ? prev.map(i=>i.name===name?{...i,qty:i.qty+1}:i) : [...prev,{name,qty:1}];
     });
   };
-  const updateQty = (name, val) =>
-    setItems(items.map(i => i.name === name ? { ...i, qty: parseInt(val, 10) || 1 } : i));
+  const setQty=(name,val)=>
+    setItems(items.map(i=>i.name===name?{...i,qty:parseInt(val,10)||1}:i));
 
-  /* ---------- Commission calculation ---------- */
-  const totalItems = items.reduce((sum, i) => sum + i.qty, 0); // replace with price calc later
-  const emp = employees.find(e => e.id == empId);
-  const pct = emp?.commission ?? 0;
-  const commissionPay = totalItems * pct / 100;
+  const total=items.reduce((s,i)=>s+i.qty,0);
+  const emp=employees.find(e=>e.id==empId);
+  const pct=emp?.commission||0;
+  const commissionPay=total*pct/100;
 
-  return (
+  return(
     <>
-      <Header />
-
+      <Header/>
       <div className="container">
-        {/* -------- Buttons on the right -------- */}
-        <div className="right">
-          <Section title="Car Internals" list={carInternals} add={addItem} />
-          <Section title="Materials" list={materials} add={addItem} />
-          <Section title="Extra Items" list={extraItems} add={addItem} />
+        {/* LEFT COLUMN ------------------------------------------------ */}
+        <div className="left">
+          {/* Receipt */}
+          <div>
+            <h2>Receipt</h2>
+            <table>
+              <thead><tr><th>Item</th><th align="right">Qty</th></tr></thead>
+              <tbody>
+                {items.map(i=>(
+                  <tr key={i.name}>
+                    <td>{i.name}</td>
+                    <td align="right">
+                      <input
+                        type="number" min="1"
+                        value={i.qty}
+                        onChange={e=>setQty(i.name,e.target.value)}
+                        style={{width:50}}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Form anchored bottom */}
+          <div style={{marginTop:'auto'}}>
+            <select value={empId} onChange={e=>setEmpId(e.target.value)}>
+              <option value="">Select your Name</option>
+              {employees.map(e=><option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
+
+            <select value={warehouse} onChange={e=>setWarehouse(e.target.value)}>
+              <option value="">Select Warehouse</option>
+              <option>Bennys</option><option>AE</option>
+            </select>
+
+            <input value={today} readOnly/>
+            <textarea rows={3} placeholder="Notes" value={notes} onChange={e=>setNotes(e.target.value)}/>
+            <p>Commission ({pct}%): ${commissionPay.toFixed(2)}</p>
+            <button className="download">Download Invoice</button>
+          </div>
         </div>
 
-        {/* -------- Receipt + form on the left -------- */}
-        <div className="left">
-          <h2>Receipt</h2>
-          <table>
-            <thead>
-              <tr><th>Item</th><th align="right">Qty</th></tr>
-            </thead>
-            <tbody>
-              {items.map(i => (
-                <tr key={i.name}>
-                  <td>{i.name}</td>
-                  <td align="right">
-                    <input
-                      type="number"
-                      min="1"
-                      value={i.qty}
-                      onChange={e => updateQty(i.name, e.target.value)}
-                      style={{ width: 50 }}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* -------- Form controls -------- */}
-          <select value={empId} onChange={e => setEmpId(e.target.value)}>
-            <option value="">Select your Name</option>
-            {employees.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-          </select>
-
-          <select value={warehouse} onChange={e => setWarehouse(e.target.value)}>
-            <option value="">Select Warehouse</option>
-            <option>Bennys</option>
-            <option>AE</option>
-          </select>
-
-          <input value={today} readOnly />
-
-          <textarea
-            rows={3}
-            placeholder="Notes"
-            value={notes}
-            onChange={e => setNotes(e.target.value)}
-          />
-
-          <p style={{ margin: '6px 0' }}>
-            Commission ({pct}%): ${commissionPay.toFixed(2)}
-          </p>
-
-          <button className="download">Download Invoice</button>
+        {/* RIGHT COLUMN ------------------------------------------------ */}
+        <div className="right">
+          <Section title="Car Internals" list={carInternals} add={addItem}/>
+          <Section title="Materials"     list={materials}    add={addItem}/>
+          <Section title="Extra Items"   list={extraItems}   add={addItem}/>
         </div>
       </div>
     </>
   );
 }
 
-/* ---------- Helper for button sections ---------- */
-function Section({ title, list, add }) {
-  return (
+function Section({title,list,add}){
+  return(
     <>
       <h2>{title}</h2>
-      {list.map(n => (
-        <button key={n} className="mat-btn" onClick={() => add(n)}>
-          {n}
-        </button>
+      {list.map(n=>(
+        <button key={n} className="mat-btn" onClick={()=>add(n)}>{n}</button>
       ))}
     </>
   );
