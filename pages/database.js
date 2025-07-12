@@ -1,1 +1,0 @@
-import Header from'../components/Header';export default()=><> <Header/><div className='p-4'>Database page placeholder</div></>;
