@@ -1,1 +1,53 @@
-body { background-color: black; color: gold; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0c0c0c;
+  color: #f0d000;
+}
+
+header {
+  background-color: #1a1a1a;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  color: #f0d000;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.container {
+  display: flex;
+  padding: 1rem;
+}
+
+.left-panel {
+  flex: 1;
+  padding: 1rem;
+  border-right: 2px solid #f0d000;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 1rem;
+}
+
+button {
+  background-color: #f0d000;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin: 0.25rem 0;
+}
+
+input, select, textarea {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: 1px solid #f0d000;
+  background-color: #1a1a1a;
+  color: #fff;
+}
