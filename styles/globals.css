@@ -1,11 +1,6 @@
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-.text-gold {
+  background-color: black;
   color: #d4af37;
-}
-.bg-gold {
-  background-color: #d4af37;
+  font-family: Arial, sans-serif;
 }
