@@ -1,0 +1,31 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: #fcd78b;
+  font-family: sans-serif;
+}
+input, select, textarea {
+  color: black;
+  padding: 4px;
+  border-radius: 4px;
+}
+button {
+  background-color: #c59b43;
+  color: black;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #e2b85d;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 6px;
+}
