@@ -1,3 +1,4 @@
+import React from 'react';
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -42,12 +43,14 @@ export default function Home() {
   };
 
   return (
-    
-<nav>
+    <>\n<nav>
   <a href="/">Home</a>
   <a href="/database">Database</a>
   <a href="/material-price">Admin Prices</a>
 </nav>
+
+    
+
 <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Invoice Generator</h1>
       <div className="mb-4">

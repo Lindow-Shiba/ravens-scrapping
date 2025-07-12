@@ -1,3 +1,4 @@
+import React from 'react';
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -26,12 +27,14 @@ export default function Database() {
   };
 
   return (
-    
-<nav>
+    <>\n<nav>
   <a href="/">Home</a>
   <a href="/database">Database</a>
   <a href="/material-price">Admin Prices</a>
 </nav>
+
+    
+
 <div className="p-4">
       <h1 className="text-xl font-bold mb-3">Employees</h1>
       <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Name" />

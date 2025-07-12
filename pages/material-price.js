@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -28,6 +29,12 @@ function PasswordGate({ children }) {
   if (ok) return children;
 
   return (
+    <>\n<nav>
+  <a href="/">Home</a>
+  <a href="/database">Database</a>
+  <a href="/material-price">Admin Prices</a>
+</nav>
+
     <div className="h-screen flex items-center justify-center">
       <div className="text-center">
         <h2 className="mb-4 font-bold">Enter Admin Password</h2>
@@ -65,11 +72,7 @@ export default function MaterialPrice() {
   return (
     <PasswordGate>
       
-<nav>
-  <a href="/">Home</a>
-  <a href="/database">Database</a>
-  <a href="/material-price">Admin Prices</a>
-</nav>
+
 <div className="p-4">
         <h1 className="text-xl font-bold mb-4">Material Price Admin</h1>
         <table>
