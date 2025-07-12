@@ -1,8 +1,11 @@
 import Link from 'next/link';
+import Image from 'next/image';
+
 export default function Header() {
   return (
     <header>
-      <div><strong>Ravens Supply</strong></div>
+      <Image src="/logo.png" alt="Raven's Logo" width={40} height={40} />
+      <h1 style={{ marginRight: 'auto' }}>Raven's Scrap & Supply</h1>
       <nav>
         <Link href="/">Home</Link>
         <Link href="/database">Database</Link>
